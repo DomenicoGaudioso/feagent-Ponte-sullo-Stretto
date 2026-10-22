@@ -1,0 +1,32 @@
+title: feagent · Ponte sullo Stretto
+description: Modello FEM globale 3D del Ponte sullo Stretto di Messina in feagent, ricostruito dal modello IBDAS 3.3f e dalle tavole del Progetto Definitivo 2011.
+remote_theme: just-the-docs/just-the-docs
+baseurl: "/feagent-Ponte-sullo-Stretto"
+url: "https://domenicogaudioso.github.io"
+lang: it
+
+plugins:
+  - jekyll-remote-theme
+
+color_scheme: light
+search_enabled: true
+heading_anchors: true
+
+aux_links:
+  "feagent":
+    - "https://github.com/DomenicoGaudioso/feagent"
+
+footer_content: >-
+  Ricostruzione a scopo di studio dai documenti pubblici del Progetto Definitivo (2011) sul portale
+  delle valutazioni ambientali del Ministero. Le figure tratte dai documenti ne citano la fonte.
+
+callouts:
+  note:
+    title: Nota
+    color: blue
+  warning:
+    title: Attenzione
+    color: yellow
+  important:
+    title: Punto aperto
+    color: red
