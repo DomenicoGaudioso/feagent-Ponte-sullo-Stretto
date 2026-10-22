@@ -30,6 +30,7 @@ Regole di traduzione dei collegamenti di C-2:
 | rilasci | braccio rigido dal master e molla a lunghezza nulla sui GdL vincolati |
 | coppie di elementi fittizi della stessa parte | sempre rigide |
 | appoggio con molla definita fuori dalle appendici (`al_r_sp`) | fisso nelle tre traslazioni (ipotesi) |
+| base dei pendoli delle selle di deviazione (riga illeggibile di C-2) | braccio rigido dal blocco di ancoraggio e **cerniera**: rotazione libera attorno all'asse trasversale, così il pendolo oscilla nel piano del cavo e il tiro passa uguale sui due lati della sella, come nei casi di validazione di PS0005 (LC7: +81,8 MN in campata laterale, +81,7 MN all'ancoraggio). Nella prima versione il pendolo era incastrato e lavorava a mensola, trattenendo un terzo della variazione di tiro |
 | ammortizzatori | bloccati (sistema fisso-fisso, come per la modale e la statica IBDAS), o molla di 33 MN/m nel sistema libero-libero |
 
 Le linee delle parti secondarie sono diradate a un nodo ogni 10 m, mantenendo i

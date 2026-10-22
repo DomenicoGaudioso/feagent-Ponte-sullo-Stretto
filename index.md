@@ -34,9 +34,12 @@ vincolo sui cavi: i vincoli sono solo le fondazioni.
 ## Risultati principali
 
 Vedi [Risultati e confronto con IBDAS](09-risultati.html). In sintesi: tiri dei cavi
-entro l'1 % da IBDAS, tiri dei pendini entro l'1 % in media, modi trasversale,
-longitudinale e verticale simmetrico entro l'1-2 %. I punti ancora aperti sono
-elencati in [Punti aperti](11-punti-aperti.html).
+entro l'1 % da IBDAS, tiri dei pendini entro l'1,6 % in media, modi trasversale,
+longitudinale e verticale simmetrico entro l'1,3 %. I carichi mobili stradali e
+ferroviari e il vento sono in [Carichi mobili e vento](14-mobili-vento.html): sotto
+il carico addensato QA l'impalcato si abbassa fino a 12-14 m e i cavi prendono il
+21 % in più di tiro; il vento SLU di raffica lo sposta di 12 m in mezzeria. I punti
+ancora aperti sono elencati in [Punti aperti](11-punti-aperti.html).
 
 ## Come leggere questa documentazione
 
@@ -49,7 +52,8 @@ elencati in [Punti aperti](11-punti-aperti.html).
 7. [Vincoli e parti secondarie](07-vincoli.html).
 8. [Stato di riferimento](08-stato-di-riferimento.html): ricerca della forma.
 9. [Risultati e confronto con IBDAS](09-risultati.html).
-10. [Vista estrusa in feagent](10-vista-estrusa.html): controllo del modello in 3D.
-11. [Punti aperti](11-punti-aperti.html).
-12. [Sezioni da disegno DXF](12-sezioni-dxf.html): lo strumento di feagent nato da questo lavoro.
-13. [Riproducibilità](13-riproducibilita.html): script, file e comandi.
+10. [Carichi mobili e vento](14-mobili-vento.html): strada, ferrovia, vento statico, riscontro con i casi di validazione IBDAS.
+11. [Vista estrusa in feagent](10-vista-estrusa.html): controllo del modello in 3D.
+12. [Punti aperti](11-punti-aperti.html).
+13. [Sezioni da disegno DXF](12-sezioni-dxf.html): lo strumento di feagent nato da questo lavoro.
+14. [Riproducibilità](13-riproducibilita.html): script, file e comandi.
