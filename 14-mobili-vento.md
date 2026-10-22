@@ -97,7 +97,8 @@ solo cassone ferroviario (0,0111) dà una coppia trascurabile rispetto a quella
 prodotta dalla differenza di portanza fra i due cassoni stradali e non si applica.
 Il vento soffia da Ovest (verso y− nel modello): il ponte è simmetrico, il vento da
 Est dà gli stessi risultati specchiati. Il carico da traffico con vento si
-considera solo al livello SLS1 (completa funzionalità).
+considera solo al livello SLS1 (completa funzionalità). Le direzioni a 45 gradi e
+lungo l'asse sono in [fondo alla pagina](#vento-a-45-gradi-e-lungo-lasse).
 
 ## Riscontro con i casi di validazione IBDAS
 
@@ -265,9 +266,64 @@ La raffica SLU rifatta con la statica non lineare:
 Per il vento la linearizzazione è buona entro il 2-4 % sugli spostamenti
 trasversali e sui tiri.
 
+## Vento a 45 gradi e lungo l'asse
+
+Le altre direzioni di PS0002 par. 6.3 (vento a 45 gradi e lungo l'asse del ponte,
+nei due versi) con i dati dell'appendice G e di PS0002 par. 6.3.1:
+
+| Parte | Vento a 45 gradi | Vento lungo l'asse |
+|---|---|---|
+| impalcato, per cassone (C<sub>D</sub> / C<sub>L</sub>) | sopravento 0,235 / −0,128, ferroviario 0,173 / −0,042, sottovento 0,091 / −0,033 (con traffico 0,235 / −0,098, 0,173 / −0,039, 0,090 / −0,030), forza trasversale all'asse | nessun coefficiente nell'appendice G: attrito trascurato |
+| coppia di cavi | principio del flusso trasversale, C = 0,5 − 0,1 | entrambi i cavi esposti, C = 0,5 + 0,5; forza C sin³θ lungo il vento e C sin²θ cosθ verticale (θ inclinazione del cavo) |
+| pendini | C<sub>D</sub> 0,8 sulla componente del vento normale al pendino | idem |
+| gambe delle torri (tab. 2.7, B = 20 m) | sopravento 1,0, sottovento 0,7 | 0,3 e 0,3 |
+| traversi di torre | C<sub>D</sub> da 2,3 alle gambe a 1,5 in mezzo, sull'altezza con i parapetti (21,5 m alle gambe, 13 m in mezzo), sulla componente normale | idem |
+
+Le forze sui cavi, sui pendini e sui traversi di torre seguono il **principio del
+flusso trasversale** dell'appendice G: conta solo la componente del vento normale
+all'elemento, q d C |w<sub>n</sub>| w<sub>n</sub>. Con il vento trasversale i traversi
+di torre sono paralleli al vento e non ricevono forza; la portanza laterale delle
+gambe (C<sub>L</sub> al massimo 0,3 per gamba) non si applica.
+
+Effetti alla raffica SLU (fra parentesi il vento medio SLS1):
+
+| Grandezza | Trasversale | 45 gradi verso s+ | 45 gradi verso s− | Longitudinale verso s+ |
+|---|---|---|---|---|
+| spostamento trasversale dell'impalcato in mezzeria [m] | −12,4 (−6,3) | −10,5 (−5,3) | −10,5 (−5,3) | 0,0 |
+| spostamento longitudinale dell'impalcato in mezzeria [m] | 0,00 | +0,015 | −0,013 | +0,014 (+0,007) |
+| spostamento longitudinale della sella, torre Sicilia [m] | +0,09 | +0,09 | +0,02 | +0,028 (+0,014) |
+| spostamento longitudinale della sella, torre Calabria [m] | −0,08 | −0,02 | −0,07 | +0,022 (+0,011) |
+| tiro del cavo sopravento in mezzeria [MN] | +25,7 | +15,5 | +15,6 | 0,0 |
+| tiro del cavo all'ancoraggio Sicilia [MN] | +24,7 | +24,1 | +4,8 | +8,6 |
+| momento orizzontale del ferroviario [MN m] | 657 | 566 | 567 | 0,4 |
+| momento longitudinale alla base, torre Sicilia, gamba Ovest [MN m] | 125 | 1127 | −993 | 892 (451) |
+| momento trasversale alla base, torre Sicilia, gamba Ovest [MN m] | 2065 | 1482 | 1483 | 2 |
+| momento longitudinale alla base, torre Calabria, gamba Ovest [MN m] | −64 | 1010 | −1077 | 883 (447) |
+
+Il vento longitudinale verso s− dà gli stessi valori con il segno opposto.
+
+* Il vento **trasversale** governa lo spostamento dell'impalcato, i tiri dei cavi e
+  la flessione trasversale delle torri.
+* Il vento **a 45 gradi** governa la flessione longitudinale delle torri: le gambe
+  e i traversi di torre sono investiti di sbieco e la componente longitudinale
+  della forza sulle torri (C<sub>D</sub> 1,0 + 0,7 sulle due gambe) supera quella del
+  vento lungo l'asse (0,3 + 0,3). Il momento longitudinale alla base delle gambe
+  arriva a 1130 MN m, due terzi di quello dei carichi da traffico QA (1728 MN m).
+* Il vento **longitudinale** carica quasi solo le torri: con gli ammortizzatori
+  bloccati l'impalcato si sposta di 1,4 cm e i cavi di campata non cambiano tiro.
+
+Verifica non lineare alla raffica SLU:
+
+| Grandezza | 45 gradi, lineare | 45 gradi, non lineare | longitudinale, lineare | longitudinale, non lineare |
+|---|---|---|---|---|
+| spostamento trasversale dell'impalcato in mezzeria [m] | −10,47 | −10,36 | 0,00 | 0,00 |
+| spostamento longitudinale della sella Sicilia [m] | +0,088 | +0,089 | +0,028 | +0,028 |
+| tiro del cavo Ovest in mezzeria [MN] | +15,5 | +16,0 | −0,03 | −0,03 |
+
 ## Cosa manca
 
-* vento longitudinale e a 45 gradi (coefficienti in PS0002 app. G, tab. 2.5 e 2.7);
+* attrito del vento longitudinale sull'impalcato (nessun coefficiente nei
+  documenti) e portanza laterale delle gambe delle torri;
 * risposta dinamica al vento turbolento (buffeting) e accelerazioni del piano
   viario (PG0024 tab. 12);
 * percorribilità dinamica con i sei treni reali RFI (PG0024 par. 5.2.3);

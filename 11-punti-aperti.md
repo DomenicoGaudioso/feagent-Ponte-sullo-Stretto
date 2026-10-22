@@ -17,5 +17,5 @@ nav_order: 12
 | Cassone ferroviario | in parte | il contorno è tarato su D-1 entro lo 0,1 %; non è ancora costruito lamiera per lamiera dalla tavola PS0102 come quello stradale |
 | Pendoli delle selle di deviazione | risolto | la base era incastrata e il pendolo tratteneva il cavo; ora è a cerniera (vedi [Vincoli](07-vincoli.html)) |
 | Densità dell'aria | dichiarato | non indicata nei documenti: 1,25 kg/m³ |
-| Vento longitudinale e a 45 gradi | da fare | analizzato solo il vento trasversale |
+| Vento longitudinale e a 45 gradi | fatto | vedi [Carichi mobili e vento](14-mobili-vento.html); manca l'attrito sull'impalcato col vento lungo l'asse, che i documenti non definiscono |
 | Treni reali RFI e analisi dinamiche | da fare | PG0024 par. 5.2.3 chiede la percorribilità dinamica con i sei treni reali |
