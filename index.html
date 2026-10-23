@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ponte sullo Stretto di Messina in feagent: modello globale a elementi finiti</title>
+<meta name="description" content="Il modello FEM globale 3D del Ponte sullo Stretto di Messina costruito con feagent: cavi e pendini non lineari, impalcato a tre cassoni, carichi mobili, vento, transito dei treni e fasi di montaggio, confrontati con i risultati del Progetto Definitivo.">
+<meta property="og:title" content="Ponte sullo Stretto di Messina in feagent">
+<meta property="og:description" content="Modello globale 3D a elementi finiti, dai permanenti al transito dei treni, verificato contro i risultati del Progetto Definitivo.">
+<meta property="og:image" content="https://domenicogaudioso.github.io/feagent-Ponte-sullo-Stretto/assets/img/geometria_prospetto.png">
+<link rel="icon" href="https://domenicogaudioso.github.io/DomenicoGaudioso/assets/feagent.png">
+<link href="https://cdn.jsdelivr.net/npm/@fontsource/inter/400.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/@fontsource/inter/500.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/@fontsource/inter/600.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/@fontsource/newsreader/400.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/@fontsource/newsreader/500.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/@fontsource/newsreader/400-italic.css" rel="stylesheet">
+<style>
+:root{
+  --bg:#fff; --ink:#14181d; --sub:#4f5a67; --muted:#8a94a0; --ring:#e7e9ec; --ring2:#d6dae0;
+  --brand:#2a7f8c; --brand7:#1f6672; --brand1:rgba(42,127,140,.1); --brand0:rgba(42,127,140,.045);
+  --red:#d03a3a; --serif:"Newsreader",Georgia,serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:#fff;color:var(--ink);font-family:"Inter",system-ui,sans-serif;font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+h1,h2,h3{font-family:var(--serif);font-weight:400;letter-spacing:-.02em;line-height:1.1}
+.wrap{width:min(1180px,92%);margin:0 auto}
+section{scroll-margin-top:96px}
+:focus-visible{outline:2px solid var(--brand);outline-offset:3px;border-radius:8px}
+
+/* intestazione */
+header.site{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.82);backdrop-filter:saturate(1.6) blur(16px);-webkit-backdrop-filter:saturate(1.6) blur(16px);border-bottom:1px solid var(--ring)}
+.nav-in{display:flex;align-items:center;gap:26px;height:72px}
+.brand{display:flex;align-items:center;gap:12px;margin-right:auto}
+.logo-mark{width:38px;height:38px;border:1px solid var(--ring2);border-radius:10px;display:grid;place-items:center}
+.logo-mark svg{width:24px;height:24px}
+.brand-txt b{font-family:var(--serif);font-weight:500;font-size:19px;letter-spacing:-.01em;display:block;line-height:1.1}
+.brand-txt span{font-size:10px;font-weight:500;color:var(--muted);letter-spacing:.2em;text-transform:uppercase}
+.nav-links{display:flex;align-items:center;gap:22px}
+.nav-links a{font-size:13.5px;font-weight:500;color:var(--sub);padding:6px 0;position:relative;transition:color .25s}
+.nav-links a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--ink);transform:scaleX(0);transform-origin:left;transition:transform .3s}
+.nav-links a:hover{color:var(--ink)}
+.nav-links a:hover::after{transform:scaleX(1)}
+.nav-cta{font-size:14px;font-weight:500;border:1px solid var(--ring2);border-radius:8px;padding:9px 18px;transition:.25s}
+.nav-cta:hover{background:var(--ink);color:#fff}
+@media(max-width:940px){.nav-links{display:none}}
+.nav-cta{white-space:nowrap}
+@media(max-width:640px){.brand-txt span{display:none}.brand-txt b{font-size:17px}.nav-in{gap:12px}.nav-cta{padding:8px 12px;font-size:13px}}
+
+/* hero */
+.hero{padding:88px 0 40px}
+.eyebrow{font-size:12px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--brand7)}
+.hero h1{font-size:clamp(40px,6.2vw,84px);letter-spacing:-.03em;line-height:1.02;margin:22px 0 26px;max-width:15em}
+.hero h1 em{color:var(--brand7);font-style:italic}
+.hero p.lead{font-size:18px;color:var(--sub);max-width:62ch}
+.ctas{display:flex;gap:12px;flex-wrap:wrap;margin-top:34px}
+.btn{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:500;border-radius:8px;padding:12px 22px;border:1px solid var(--ring2);transition:.25s;cursor:pointer;background:transparent;font-family:inherit;color:var(--ink)}
+.btn:hover{border-color:var(--ink)}
+.btn-primary{background:var(--ink);border-color:var(--ink);color:#fff}
+.btn-primary:hover{background:#000}
+
+/* visualizzatore */
+.viewer-section{padding:28px 0 20px}
+.viewer{position:relative;border:1px solid var(--ring2);border-radius:20px;overflow:hidden;background:
+  radial-gradient(900px 420px at 50% 0%,rgba(42,127,140,.07),transparent 70%),#fff;height:clamp(360px,58vh,600px);touch-action:none}
+.viewer canvas{position:absolute;inset:0;width:100%;height:100%;display:block;cursor:grab}
+.viewer canvas.drag{cursor:grabbing}
+.v-bar{position:absolute;z-index:2;display:flex;gap:6px;flex-wrap:wrap}
+.v-tl{top:16px;left:16px}
+.v-tr{top:16px;right:16px;align-items:center;background:rgba(255,255,255,.85);backdrop-filter:blur(6px);border:1px solid var(--ring);border-radius:10px;padding:6px 10px;gap:10px}
+.chip{font:500 12.5px "Inter",sans-serif;border:1px solid var(--ring2);background:rgba(255,255,255,.88);color:var(--sub);border-radius:8px;padding:6px 12px;cursor:pointer;transition:.2s}
+.chip:hover{border-color:var(--ink);color:var(--ink)}
+.chip.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.v-tr label{font-size:12px;color:var(--sub);display:flex;align-items:center;gap:8px}
+.v-tr input[type=range]{width:120px;accent-color:var(--brand7)}
+.v-tr output{font:500 12px "Inter",sans-serif;min-width:34px;color:var(--ink)}
+.v-bl{position:absolute;left:16px;bottom:14px;z-index:2;display:flex;gap:16px;flex-wrap:wrap;font-size:11.5px;color:var(--sub);background:rgba(255,255,255,.8);backdrop-filter:blur(6px);border:1px solid var(--ring);border-radius:10px;padding:6px 12px}
+.v-bl i{display:inline-block;width:18px;height:0;border-top:2px solid;vertical-align:middle;margin-right:6px}
+.v-br{position:absolute;right:16px;bottom:14px;z-index:2;font-size:11.5px;color:var(--sub);text-align:right;max-width:40ch;background:rgba(255,255,255,.8);backdrop-filter:blur(6px);border:1px solid var(--ring);border-radius:10px;padding:6px 12px}
+@media(max-width:640px){.v-tr{top:56px;right:auto;left:16px}.scale{top:auto;bottom:62px;right:16px}.v-br{display:none}.v-bl{gap:10px;font-size:10.5px}.v-tr input[type=range]{width:80px}.v-tl .chip{padding:5px 9px}}
+.scale{position:absolute;right:16px;top:64px;z-index:2;display:none;font-size:11px;color:var(--sub);background:rgba(255,255,255,.88);border:1px solid var(--ring);border-radius:10px;padding:8px 12px}
+.scale.on{display:block}
+.scale .bar{width:150px;height:8px;border-radius:4px;margin:4px 0 2px;background:linear-gradient(90deg,#d03a3a,#f0a030,#e6d34a,#74c37a,#2aa6b4,#3b6fd0)}
+.scale .t{display:flex;justify-content:space-between}
+.loading{position:absolute;inset:0;display:grid;place-items:center;font-size:13px;color:var(--muted);z-index:1}
+
+/* numeri */
+.stats{padding:56px 0 24px}
+.stats-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:0;border-top:1px solid var(--ring2)}
+.stat{padding:22px 22px 6px 0}
+.stat b{font-family:var(--serif);font-weight:400;font-size:clamp(30px,3.6vw,46px);letter-spacing:-.02em;line-height:1.05;display:block}
+.stat span{font-size:12.5px;color:var(--sub);display:block;margin-top:6px;max-width:22ch}
+@media(max-width:900px){.stats-grid{grid-template-columns:repeat(2,1fr)}}
+
+/* sezioni */
+.sec{padding:112px 0 0}
+.sec-head{max-width:760px;margin-bottom:48px}
+.sec-head .eyebrow{display:block;margin-bottom:16px}
+.sec-head h2{font-size:clamp(32px,4.2vw,54px)}
+.sec-head p{font-size:17px;color:var(--sub);margin-top:16px;max-width:62ch}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--ring);border:1px solid var(--ring);border-radius:16px;overflow:hidden}
+.card{background:#fff;padding:38px 34px}
+.card .n{font-size:11px;font-weight:500;letter-spacing:.18em;color:var(--muted)}
+.card h3{font-size:26px;margin:10px 0 12px}
+.card p{font-size:14.5px;color:var(--sub)}
+.card a.more{display:inline-block;margin-top:16px;font-size:13.5px;font-weight:500;color:var(--brand7)}
+.card a.more:hover{color:var(--ink)}
+@media(max-width:860px){.cards{grid-template-columns:1fr}}
+
+/* casi di carico */
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:28px}
+.tab{font:500 13.5px "Inter",sans-serif;border:1px solid var(--ring2);background:#fff;color:var(--sub);border-radius:8px;padding:9px 16px;cursor:pointer;transition:.2s}
+.tab:hover{border-color:var(--ink);color:var(--ink)}
+.tab[aria-selected=true]{background:var(--ink);border-color:var(--ink);color:#fff}
+.panel{display:none;grid-template-columns:.9fr 1.1fr;gap:56px;align-items:start}
+.panel.on{display:grid;animation:rise .5s ease both}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.panel h3{font-size:34px;margin-bottom:14px}
+.panel p{color:var(--sub);font-size:15.5px}
+.kv{margin:24px 0 8px;border-top:1px solid var(--ring)}
+.kv div{display:flex;justify-content:space-between;gap:18px;padding:11px 0;border-bottom:1px solid var(--ring);font-size:14px}
+.kv b{font-family:var(--serif);font-weight:400;font-size:19px;white-space:nowrap}
+.kv span{color:var(--sub)}
+.panel .go{display:inline-block;margin-top:18px;font-size:14px;font-weight:500;color:var(--brand7)}
+.panel .go:hover{color:var(--ink)}
+figure.fig{border:1px solid var(--ring);border-radius:16px;overflow:hidden;background:#fff}
+figure.fig img{width:100%;height:auto}
+figure.fig figcaption{font-size:12.5px;color:var(--muted);padding:12px 16px;border-top:1px solid var(--ring)}
+.tbl{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:6px}
+.tbl th,.tbl td{padding:9px 10px;border-bottom:1px solid var(--ring);text-align:left}
+.tbl th{font-weight:500;color:var(--muted);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase}
+.tbl td:nth-child(n+2){font-variant-numeric:tabular-nums}
+@media(max-width:900px){.panel.on{grid-template-columns:1fr;gap:28px}}
+
+/* validazione */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+.box{border:1px solid var(--ring);border-radius:16px;padding:30px 30px 20px}
+.box h3{font-size:24px;margin-bottom:14px}
+.note{margin-top:18px;font-size:13.5px;color:var(--sub)}
+.note a{color:var(--brand7);font-weight:500}
+@media(max-width:860px){.two{grid-template-columns:1fr}}
+
+/* documentazione */
+.docs{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--ring)}
+.docs a{display:flex;gap:16px;align-items:baseline;padding:16px 14px 16px 0;border-bottom:1px solid var(--ring);transition:.2s}
+.docs a:hover{padding-left:8px;color:var(--brand7)}
+.docs a em{font-style:normal;font-size:11.5px;font-weight:500;letter-spacing:.14em;color:var(--muted);min-width:22px}
+.docs a span{font-size:14.5px}
+@media(max-width:900px){.docs{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.docs{grid-template-columns:1fr}}
+
+footer.site{margin-top:120px;border-top:1px solid var(--ring);padding:36px 0 48px;font-size:13px;color:var(--sub)}
+footer.site .wrap{display:flex;gap:28px;justify-content:space-between;flex-wrap:wrap}
+footer.site p{max-width:62ch}
+footer.site nav{display:flex;gap:18px;flex-wrap:wrap}
+footer.site a{color:var(--brand7);font-weight:500}
+[data-reveal]{opacity:0;transform:translateY(22px);transition:opacity .8s ease,transform .8s ease}
+[data-reveal].in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}[data-reveal]{opacity:1;transform:none}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap nav-in">
+    <a class="brand" href="https://domenicogaudioso.github.io/DomenicoGaudioso/">
+      <span class="logo-mark"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M3 21.5h26" stroke="#14181d" stroke-width="2.6" stroke-linecap="round"/><path d="M5.5 21.5v-5a10.5 10.5 0 0 1 21 0v5" stroke="#2a7f8c" stroke-width="2.6" fill="none" stroke-linecap="round"/><path d="M10.5 21.5v-5.4M16 21.5v-7.6M21.5 21.5v-5.4" stroke="#14181d" stroke-width="2" stroke-linecap="round"/><path d="M7 21.5V26M25 21.5V26" stroke="#14181d" stroke-width="2.6" stroke-linecap="round"/></svg></span>
+      <span class="brand-txt"><b>Ing. Domenico Gaudioso</b><span>ingegneria strutturale</span></span>
+    </a>
+    <nav class="nav-links">
+      <a href="#modello">Il modello</a>
+      <a href="#casi">Casi di carico</a>
+      <a href="#validazione">Validazione</a>
+      <a href="#documentazione">Documentazione</a>
+      <a href="https://domenicogaudioso.github.io/DomenicoGaudioso/feagent/">feagent</a>
+    </nav>
+    <a class="nav-cta" href="https://github.com/DomenicoGaudioso/feagent-Ponte-sullo-Stretto" target="_blank" rel="noopener">Repository ↗</a>
+  </div>
+</header>
+
+<main>
+<section class="hero">
+  <div class="wrap">
+    <span class="eyebrow">Caso di studio · feagent</span>
+    <h1>Il Ponte sullo Stretto di Messina, <em>in un modello a elementi finiti.</em></h1>
+    <p class="lead">Ricostruzione 3D dell'intera opera dal Progetto Definitivo del 2011: impalcato a tre cassoni, cavi e pendini non lineari, torri, carichi mobili stradali e ferroviari, vento, transito dei treni e fasi di montaggio. Ogni risultato è confrontato con quello del progetto.</p>
+    <div class="ctas">
+      <a class="btn btn-primary" href="#modello">Esplora il modello ↓</a>
+      <a class="btn" href="panoramica.html">Documentazione tecnica →</a>
+    </div>
+  </div>
+</section>
+
+<section class="viewer-section" id="modello">
+  <div class="wrap">
+    <div class="viewer" id="viewer">
+      <div class="loading" id="loading">Caricamento del modello…</div>
+      <canvas id="cv" aria-label="Modello 3D del ponte, trascina per ruotare"></canvas>
+      <div class="v-bar v-tl" id="views">
+        <button class="chip on" data-v="3d">3D</button>
+        <button class="chip" data-v="pro">Prospetto</button>
+        <button class="chip" data-v="pia">Pianta</button>
+        <button class="chip" data-v="tor">Torre Sicilia</button>
+      </div>
+      <div class="v-bar v-tr">
+        <label><input type="checkbox" id="defOn"> Deformata</label>
+        <input type="range" id="defAmp" min="1" max="60" value="25" aria-label="Amplificazione della deformata">
+        <output id="defOut">×25</output>
+      </div>
+      <div class="scale" id="scale"><div>uz del cassone [m]</div><div class="bar"></div><div class="t"><span id="scMin">−0,54</span><span id="scMax">+0,69</span></div></div>
+      <div class="v-bl">
+        <span><i style="border-color:#1f6672"></i>cavi principali</span>
+        <span><i style="border-color:#7fb5bd;border-top-width:1px"></i>pendini</span>
+        <span><i style="border-color:#14181d"></i>impalcato</span>
+        <span><i style="border-color:#14181d;border-top-width:4px"></i>torri</span>
+      </div>
+      <div class="v-br">Trascina per ruotare. La deformata è lo stato dei permanenti, spostamenti amplificati.</div>
+    </div>
+  </div>
+</section>
+
+<section class="stats" data-reveal>
+  <div class="wrap">
+    <div class="stats-grid">
+      <div class="stat"><b>3&nbsp;300 m</b><span>campata centrale, torri a ±1&nbsp;650 m</span></div>
+      <div class="stat"><b>399 m</b><span>quota delle selle sulle torri</span></div>
+      <div class="stat"><b>3&nbsp;971</b><span>nodi, 3&nbsp;980 travi, 578 cavi e pendini</span></div>
+      <div class="stat"><b>≤ 1 %</b><span>scarto dai tiri dei cavi del progetto</span></div>
+      <div class="stat"><b>441</b><span>combinazioni di carico di PG0024</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="cosa">
+  <div class="wrap">
+    <div class="sec-head" data-reveal>
+      <span class="eyebrow">Il lavoro</span>
+      <h2>Dalle tabelle del progetto a un modello che si può usare.</h2>
+      <p>Il modello nasce dal modello IBDAS 3.3f e dalle tavole quotate dell'impalcato, ed è costruito passo dopo passo misurando ogni passo contro i risultati IBDAS. Tutto a elementi trave, più cavi e pendini.</p>
+    </div>
+    <div class="cards" data-reveal>
+      <div class="card"><span class="n">01</span><h3>Impalcato a tre cassoni</h3><p>Due cassoni stradali laterali e il cassone ferroviario centrale, a sezione variabile. Il cassone stradale è costruito dalla tavola quotata, lamiera per lamiera, con i 117 traversi dei pendini a nodi condivisi.</p><a class="more" href="04-sezioni.html">Sezioni e traversi →</a></div>
+      <div class="card"><span class="n">02</span><h3>Cavi e pendini non lineari</h3><p>Un cavo per lato e 119 pendini ogni 30 m, con lunghezza a riposo dai tiri del progetto. Lo stato di riferimento trova da sé la controfreccia delle torri.</p><a class="more" href="08-stato-di-riferimento.html">Stato di riferimento →</a></div>
+      <div class="card"><span class="n">03</span><h3>Torri, selle, fondazioni</h3><p>Gambe a sezione variabile con pareti interne, tre traversi di torre, selle di deviazione a cerniera, strutture terminali, viadotti di approccio e vincoli.</p><a class="more" href="07-vincoli.html">Vincoli e parti secondarie →</a></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="casi">
+  <div class="wrap">
+    <div class="sec-head" data-reveal>
+      <span class="eyebrow">Casi di carico</span>
+      <h2>Dai permanenti al transito dei treni.</h2>
+      <p>Ogni azione ha la sua pagina con i dati, il metodo e il confronto con il progetto. Qui i risultati principali.</p>
+    </div>
+
+    <div class="tabs" role="tablist" id="tabs">
+      <button class="tab" role="tab" aria-selected="true" data-p="p1">Permanenti</button>
+      <button class="tab" role="tab" aria-selected="false" data-p="p2">Traffico</button>
+      <button class="tab" role="tab" aria-selected="false" data-p="p3">Vento</button>
+      <button class="tab" role="tab" aria-selected="false" data-p="p4">Casi di validazione</button>
+      <button class="tab" role="tab" aria-selected="false" data-p="p5">Transito dei treni</button>
+      <button class="tab" role="tab" aria-selected="false" data-p="p6">Montaggio</button>
+    </div>
+
+    <div class="panel on" id="p1">
+      <div>
+        <h3>Permanenti</h3>
+        <p>I pesi strutturali e non strutturali (casi PP e PN di PS0002) sono applicati voce per voce e tarati sui tiri dei pendini del progetto. Con i permanenti il modello trova la forma di equilibrio di cavi e torri.</p>
+        <div class="kv">
+          <div><span>Tiro del cavo in mezzeria</span><b>1&nbsp;291 MN <small style="font:12px Inter;color:#8a94a0">(progetto 1&nbsp;289)</small></b></div>
+          <div><span>Tiro alla sella, campata centrale</span><b>1&nbsp;384 MN</b></div>
+          <div><span>Pendini, scarto medio dal progetto</span><b>1,6 %</b></div>
+          <div><span>Carico medio dell'impalcato sospeso</span><b>268,1 kN/m</b></div>
+        </div>
+        <a class="go" href="06-carichi.html">Carichi permanenti e taratura →</a> &nbsp; <a class="go" href="09-risultati.html">Risultati →</a>
+      </div>
+      <figure class="fig"><img loading="lazy" src="assets/img/geometria_prospetto.png" alt="Prospetto del ponte"><figcaption>Prospetto: cavo, pendini, impalcato e torri dal modello IBDAS.</figcaption></figure>
+    </div>
+
+    <div class="panel" id="p2">
+      <div>
+        <h3>Carichi da traffico</h3>
+        <p>Strada e ferrovia secondo PG0024: carico addensato QA per la capacità portante, rarefatto QR per la deformabilità. Si usano le linee d'influenza sulla rigidezza tangente dello stato di riferimento, e le disposizioni peggiori si rifanno in non lineare.</p>
+        <div class="kv">
+          <div><span>Abbassamento in mezzeria, QA</span><b>−13,5 m</b></div>
+          <div><span>Tiro del cavo in mezzeria, QA</span><b>+277 MN (+21 %)</b></div>
+          <div><span>Pendenza convenzionale, due treni</span><b>1,49 %<small style="font:12px Inter;color:#8a94a0"> (limite 2,2)</small></b></div>
+          <div><span>Momento alla base della gamba, QA</span><b>1&nbsp;728 MN m</b></div>
+        </div>
+        <a class="go" href="14-mobili-vento.html">Carichi mobili e vento →</a>
+      </div>
+      <figure class="fig"><img loading="lazy" src="assets/img/mobili_inviluppo_uz.png" alt="Inviluppo degli spostamenti verticali"><figcaption>Inviluppo degli spostamenti verticali del cassone ferroviario sotto QA e QR.</figcaption></figure>
+    </div>
+
+    <div class="panel" id="p3">
+      <div>
+        <h3>Vento statico</h3>
+        <p>Profilo logaritmico di PG0024, coefficienti aerodinamici dell'appendice G di PS0002, quattro livelli e cinque direzioni: trasversale, a 45 gradi e lungo l'asse, nei due versi.</p>
+        <div class="kv">
+          <div><span>Spostamento trasversale, SLU raffica</span><b>−12,4 m</b></div>
+          <div><span>Tiro del cavo sopravento, SLU raffica</span><b>+25,7 MN</b></div>
+          <div><span>Momento alla base della gamba, 45°</span><b>1&nbsp;130 MN m</b></div>
+          <div><span>Linearizzazione, scarto sul trasversale</span><b>2 %</b></div>
+        </div>
+        <a class="go" href="14-mobili-vento.html#risultati-vento-statico">Risultati del vento →</a>
+      </div>
+      <figure class="fig"><img loading="lazy" src="assets/img/vento_uy.png" alt="Spostamento trasversale sotto il vento"><figcaption>Spostamento trasversale dell'impalcato lungo il ponte, vento da Ovest.</figcaption></figure>
+    </div>
+
+    <div class="panel" id="p4">
+      <div>
+        <h3>Casi di validazione di PS0005</h3>
+        <p>Dieci casi statici calcolati da IBDAS nella relazione di validazione. Per ognuno: lo schema del carico del progetto, il carico come è applicato in feagent e tutte le grandezze riportate, modello contro IBDAS.</p>
+        <table class="tbl">
+          <tr><th>Caso</th><th>Cavo mezzeria uz [m]</th><th>Tiro mezzeria [MN]</th></tr>
+          <tr><td>LC1 · 2 × 5000 kN</td><td>−1,05 | −1,16</td><td>+8,8 | +9,2</td></tr>
+          <tr><td>LC7 · 25 kN/m</td><td>−2,49 | −2,84</td><td>+81,0 | +82,5</td></tr>
+          <tr><td>LC9 · 10 kN/m trasv.</td><td></td><td>+0,3 | +0,6</td></tr>
+          <tr><td>LC10 · 3 × 25 kN/m</td><td>−2,24 | −2,46</td><td>+71,4 | +74,0</td></tr>
+        </table>
+        <p class="note">feagent | IBDAS. Tiri entro il 2-4 %, spostamento trasversale entro il 6 %.</p>
+        <a class="go" href="15-casi-ps0005.html">Tutti i casi, input e output →</a> &nbsp; <a class="go" href="16-casi-combinazioni.html">Casi e combinazioni →</a>
+      </div>
+      <figure class="fig"><img loading="lazy" src="assets/img/ps0005_lc7.png" alt="Schema del carico LC7 di PS0005"><figcaption>Schema del carico LC7 in PS0005: 25 kN/m verticali su metà larghezza, per tutta la lunghezza.</figcaption></figure>
+    </div>
+
+    <div class="panel" id="p5">
+      <div>
+        <h3>Transito dinamico dei treni</h3>
+        <p>Analisi al passo dei sei treni reali RFI sul modello globale, con ponte e veicoli accoppiati, integrazione HHT e i criteri di percorribilità, sicurezza e comfort della relazione del progetto.</p>
+        <div class="kv">
+          <div><span>Pendenza trasversale (limite 0,08)</span><b>0,021</b></div>
+          <div><span>Accelerazione non compensata (limite 0,6)</span><b>0,26 m/s²</b></div>
+          <div><span>Svio Y/P (limite 0,8)</span><b>0,20</b></div>
+          <div><span>Ribaltamento ΔP/P (limite 0,9)</span><b>0,27</b></div>
+        </div>
+        <a class="go" href="17-transito-treni.html">Transito dei treni →</a>
+      </div>
+      <figure class="fig"><img loading="lazy" src="assets/img/transito_confronto_pb0029.png" alt="Confronto con la relazione di percorribilità"><figcaption>Criteri di percorribilità e comfort: questo modello contro la relazione del progetto.</figcaption></figure>
+    </div>
+
+    <div class="panel" id="p6">
+      <div>
+        <h3>Fasi costruttive</h3>
+        <p>Analisi non lineare per fasi del montaggio, dalle torri e dai cavi fino ai permanenti portati: 13 fasi dalla verifica di montaggio del progetto. Si confronta lo stato finale con e senza fasi.</p>
+        <div class="kv">
+          <div><span>Abbassamento in mezzeria, con fasi</span><b>+0,17 m</b></div>
+          <div><span>Abbassamento in mezzeria, senza fasi</span><b>−0,29 m</b></div>
+          <div><span>Tiro del cavo in mezzeria</span><b>−0,7 %</b></div>
+          <div><span>Tiro all'ancoraggio Sicilia</span><b>−5,5 %</b></div>
+        </div>
+        <a class="go" href="18-fasi-costruttive.html">Analisi per fasi →</a>
+      </div>
+      <figure class="fig"><img loading="lazy" src="assets/img/fasi_evoluzione.png" alt="Evoluzione fase per fase"><figcaption>Abbassamento dell'impalcato e tiro del cavo in mezzeria, fase per fase.</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="validazione">
+  <div class="wrap">
+    <div class="sec-head" data-reveal>
+      <span class="eyebrow">Validazione</span>
+      <h2>Numero per numero, contro il progetto.</h2>
+      <p>Lo scopo è un modello che rispecchi quello della documentazione. Ogni passo si misura contro i risultati IBDAS 3.3f, e quello che ancora non torna è dichiarato.</p>
+    </div>
+    <div class="two" data-reveal>
+      <div class="box">
+        <h3>Tiri dei cavi, permanenti</h3>
+        <table class="tbl">
+          <tr><th>Punto</th><th>feagent [MN]</th><th>IBDAS [MN]</th><th>Scarto</th></tr>
+          <tr><td>mezzeria</td><td>1&nbsp;291</td><td>1&nbsp;289</td><td>+0,1 %</td></tr>
+          <tr><td>sella, centrale</td><td>1&nbsp;384</td><td>1&nbsp;383</td><td>+0,1 %</td></tr>
+          <tr><td>sella, laterale</td><td>1&nbsp;407</td><td>1&nbsp;417</td><td>−0,7 %</td></tr>
+          <tr><td>ancoraggio Sicilia</td><td>1&nbsp;328</td><td>1&nbsp;341</td><td>−0,9 %</td></tr>
+        </table>
+      </div>
+      <div class="box">
+        <h3>Modi propri</h3>
+        <table class="tbl">
+          <tr><th>Modo</th><th>feagent [Hz]</th><th>IBDAS [Hz]</th><th>Scarto</th></tr>
+          <tr><td>1° trasversale</td><td>0,0296</td><td>0,030</td><td>−1,3 %</td></tr>
+          <tr><td>1° verticale antisim.</td><td>0,0504</td><td>0,055</td><td>−8,3 %</td></tr>
+          <tr><td>longitudinale</td><td>0,0647</td><td>0,065</td><td>−0,5 %</td></tr>
+          <tr><td>1° verticale sim.</td><td>0,0804</td><td>0,081</td><td>−0,7 %</td></tr>
+        </table>
+      </div>
+    </div>
+    <p class="note" data-reveal>Punti ancora aperti: il modo verticale antisimmetrico, l'abbassamento in mezzeria sotto i permanenti e i pendini vicino alle torri. <a href="11-punti-aperti.html">Elenco completo →</a></p>
+  </div>
+</section>
+
+<section class="sec" id="documentazione">
+  <div class="wrap">
+    <div class="sec-head" data-reveal>
+      <span class="eyebrow">Per i tecnici</span>
+      <h2>Documentazione completa.</h2>
+      <p>Fonti, riferimenti, geometria, sezioni dalle tavole, carichi, vincoli, risultati e punti aperti, fino agli script per rifare tutto.</p>
+    </div>
+    <div class="docs" data-reveal>
+      <a href="panoramica.html"><em>00</em><span>Panoramica</span></a>
+      <a href="01-fonti.html"><em>01</em><span>Fonti e documenti</span></a>
+      <a href="02-riferimento.html"><em>02</em><span>Sistema di riferimento</span></a>
+      <a href="03-geometria.html"><em>03</em><span>Geometria</span></a>
+      <a href="04-sezioni.html"><em>04</em><span>Sezioni</span></a>
+      <a href="05-traversi.html"><em>05</em><span>Traversi e collegamenti</span></a>
+      <a href="06-carichi.html"><em>06</em><span>Carichi permanenti</span></a>
+      <a href="07-vincoli.html"><em>07</em><span>Vincoli e parti secondarie</span></a>
+      <a href="08-stato-di-riferimento.html"><em>08</em><span>Stato di riferimento</span></a>
+      <a href="09-risultati.html"><em>09</em><span>Risultati e confronto con IBDAS</span></a>
+      <a href="10-vista-estrusa.html"><em>10</em><span>Vista estrusa in feagent</span></a>
+      <a href="14-mobili-vento.html"><em>11</em><span>Carichi mobili e vento</span></a>
+      <a href="15-casi-ps0005.html"><em>12</em><span>Casi di validazione PS0005</span></a>
+      <a href="16-casi-combinazioni.html"><em>13</em><span>Casi di carico e combinazioni</span></a>
+      <a href="17-transito-treni.html"><em>14</em><span>Transito dei treni</span></a>
+      <a href="18-fasi-costruttive.html"><em>15</em><span>Fasi costruttive</span></a>
+      <a href="12-sezioni-dxf.html"><em>16</em><span>Sezioni da disegno DXF</span></a>
+      <a href="11-punti-aperti.html"><em>17</em><span>Punti aperti</span></a>
+      <a href="13-riproducibilita.html"><em>18</em><span>Riproducibilità</span></a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <p>Ricostruzione a scopo di studio dai documenti pubblici del Progetto Definitivo (2011) sul portale delle valutazioni ambientali del Ministero. Le figure tratte dai documenti ne citano la fonte. Non è un elaborato ufficiale né una verifica dell'opera.</p>
+    <nav>
+      <a href="https://domenicogaudioso.github.io/DomenicoGaudioso/feagent/">feagent</a>
+      <a href="https://github.com/DomenicoGaudioso/feagent-Ponte-sullo-Stretto" target="_blank" rel="noopener">Repository</a>
+      <a href="https://domenicogaudioso.github.io/DomenicoGaudioso/">Sito personale</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+(function(){
+  /* ---------- schede dei casi di carico ---------- */
+  var tabs = document.querySelectorAll('.tab');
+  tabs.forEach(function(t){
+    t.addEventListener('click', function(){
+      tabs.forEach(function(x){ x.setAttribute('aria-selected', x===t ? 'true' : 'false'); });
+      document.querySelectorAll('.panel').forEach(function(p){ p.classList.toggle('on', p.id === t.getAttribute('data-p')); });
+    });
+  });
+  /* comparsa delle sezioni */
+  if('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } }); }, {threshold:.12});
+    document.querySelectorAll('[data-reveal]').forEach(function(el){ io.observe(el); });
+  } else { document.querySelectorAll('[data-reveal]').forEach(function(el){ el.classList.add('in'); }); }
+
+  /* ---------- visualizzatore 3D del modello ---------- */
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var cv = document.getElementById('cv'), ctx = cv.getContext('2d');
+  var viewer = document.getElementById('viewer');
+  var P, U, B, C, nN, cx0, cy0, cz0, W=0, H=0, dpr=1, ready=false, dirty=true;
+  var st = {yaw:-0.4, pitch:0.3, zoom:1.12, cx:0, cz:0, amp:0};
+  var tw = null, drag = null, idleT = 0, active = false, lastInteract = 0;
+  var uMin = -0.54, uMax = 0.69;
+
+  var VIEWS = {
+    '3d':  {yaw:-0.4, pitch:0.3, zoom:1.12, cx:0, cz:0},
+    'pro': {yaw:0, pitch:0, zoom:1, cx:0, cz:0},
+    'pia': {yaw:0, pitch:1.5708, zoom:1, cx:0, cz:0},
+    'tor': {yaw:-0.75, pitch:0.22, zoom:5.2, cx:-1650, cz:10}
+  };
+
+  fetch('assets/data/ponte.json').then(function(r){ return r.json(); }).then(function(d){
+    var n = d.nodes.length/3; nN = n;
+    P = new Float32Array(d.nodes.length); U = new Float32Array(d.u.length);
+    for(var i=0;i<P.length;i++){ P[i] = d.nodes[i]/10; U[i] = d.u[i]/100; }
+    B = d.beams; C = d.cables;
+    var mn=[1e9,1e9,1e9], mx=[-1e9,-1e9,-1e9];
+    for(i=0;i<n;i++) for(var k=0;k<3;k++){ var v=P[3*i+k]; if(v<mn[k])mn[k]=v; if(v>mx[k])mx[k]=v; }
+    cx0=(mn[0]+mx[0])/2; cy0=0; cz0=(mn[2]+mx[2])/2;
+    document.getElementById('loading').style.display='none';
+    ready = true; resize(); apply('3d', true);
+    if(!reduce) requestAnimationFrame(loop);
+  }).catch(function(){ document.getElementById('loading').textContent = 'Modello non disponibile'; });
+
+  function resize(){
+    dpr = Math.min(window.devicePixelRatio||1, 2);
+    W = viewer.clientWidth; H = viewer.clientHeight;
+    cv.width = W*dpr; cv.height = H*dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    dirty = true;
+  }
+  window.addEventListener('resize', resize);
+
+  function project(x,y,z,cy,sy,cp,sp,s,ox,oy){
+    var X = x-cx0-st.cx, Y = y-cy0, Z = z-cz0-st.cz;
+    var x1 = X*cy - Y*sy, y1 = X*sy + Y*cy;
+    var z2 = y1*sp + Z*cp;
+    return [ox + x1*s, oy - z2*s];
+  }
+
+  var cyl = null;
+  function ramp(t){ /* 0 = abbassamento massimo (rosso), 1 = sollevamento (blu) */
+    var st2 = [[0,[208,58,58]],[.25,[240,160,48]],[.5,[230,211,74]],[.7,[116,195,122]],[.85,[42,166,180]],[1,[59,111,208]]];
+    for(var i=1;i<st2.length;i++){ if(t<=st2[i][0]){ var a=st2[i-1], b=st2[i], f=(t-a[0])/(b[0]-a[0]);
+      return 'rgb('+Math.round(a[1][0]+(b[1][0]-a[1][0])*f)+','+Math.round(a[1][1]+(b[1][1]-a[1][1])*f)+','+Math.round(a[1][2]+(b[1][2]-a[1][2])*f)+')'; } }
+    return 'rgb(59,111,208)';
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    if(!ready) return;
+    var yaw = st.yaw + (active||reduce ? 0 : Math.sin(idleT)*0.05);
+    var cyw = Math.cos(yaw), syw = Math.sin(yaw), cp = Math.cos(st.pitch), sp = Math.sin(st.pitch);
+    var s = (W*0.92/5200)*st.zoom, ox = W/2, oy = H*(st.pitch>1.2 ? 0.5 : 0.56);
+    var amp = st.amp;
+    var px = new Float32Array(nN), py = new Float32Array(nN);
+    for(var i=0;i<nN;i++){
+      var x=P[3*i]+U[3*i]*amp, y=P[3*i+1]+U[3*i+1]*amp, z=P[3*i+2]+U[3*i+2]*amp;
+      var X = x-cx0-st.cx, Y = y-cy0, Z = z-cz0-st.cz;
+      var x1 = X*cyw - Y*syw, y1 = X*syw + Y*cyw;
+      px[i] = ox + x1*s; py[i] = oy - (y1*sp + Z*cp)*s;
+    }
+    function batch(list, color, w){
+      ctx.beginPath();
+      for(var q=0;q<list.length;q+=2){ ctx.moveTo(px[list[q]],py[list[q]]); ctx.lineTo(px[list[q+1]],py[list[q+1]]); }
+      ctx.strokeStyle = color; ctx.lineWidth = w; ctx.stroke();
+    }
+    if(!cyl){
+      cyl = {xb:[], oth:[], road:[], rail:[], tow:[], hang:[], cab:[]};
+      for(var b=0;b<B.length;b+=3){
+        var g=B[b+2], t=g===2?cyl.xb:g===4?cyl.oth:g===0?cyl.road:g===1?cyl.rail:cyl.tow; t.push(B[b],B[b+1]);
+      }
+      for(var c=0;c<C.length;c+=3){ (C[c+2]===1?cyl.hang:cyl.cab).push(C[c],C[c+1]); }
+    }
+    ctx.lineCap='round'; ctx.lineJoin='round';
+    batch(cyl.xb,'rgba(20,24,29,.10)',.6);
+    batch(cyl.oth,'rgba(20,24,29,.22)',.8);
+    batch(cyl.hang,'rgba(42,127,140,.32)',.7);
+    if(amp>0.01){
+      /* cassoni colorati per spostamento verticale */
+      var bins = {};
+      var lists = [cyl.road, cyl.rail];
+      for(var L=0;L<2;L++){
+        var ls = lists[L];
+        for(var q=0;q<ls.length;q+=2){
+          var uz = (U[3*ls[q]+2]+U[3*ls[q+1]+2])/2;
+          var tt = (uz-uMin)/(uMax-uMin); tt = tt<0?0:tt>1?1:tt; var key = Math.round(tt*24);
+          (bins[key] = bins[key] || []).push(ls[q],ls[q+1]);
+        }
+      }
+      for(var k in bins){ batch(bins[k], ramp(k/24), 1.7); }
+    } else {
+      batch(cyl.road,'rgba(20,24,29,.55)',1.1);
+      batch(cyl.rail,'rgba(59,116,168,.8)',1.2);
+    }
+    batch(cyl.cab,'#1f6672',1.6);
+    batch(cyl.tow,'rgba(20,24,29,.85)',2.2);
+  }
+
+  function loop(ts){
+    if(!reduce){
+      if(!active && !tw) { idleT += 0.012; dirty = true; }
+    }
+    if(tw){
+      var k = Math.min(1,(performance.now()-tw.t0)/tw.dur), e = k<.5 ? 4*k*k*k : 1-Math.pow(-2*k+2,3)/2;
+      for(var p in tw.to) st[p] = tw.from[p] + (tw.to[p]-tw.from[p])*e;
+      dirty = true; if(k>=1) tw = null;
+    }
+    if(dirty){ draw(); dirty = false; }
+    requestAnimationFrame(loop);
+  }
+
+  function go(to, dur){
+    if(reduce){ for(var p in to) st[p]=to[p]; dirty=true; draw(); return; }
+    var from = {}; for(var p2 in to) from[p2] = st[p2];
+    tw = {from:from, to:to, t0:performance.now(), dur:dur||900};
+  }
+  function apply(v, instant){
+    var o = VIEWS[v]; if(!o) return;
+    var t = {yaw:o.yaw, pitch:o.pitch, zoom:o.zoom, cx:o.cx, cz:o.cz};
+    if(instant){ for(var p in t) st[p]=t[p]; dirty=true; if(reduce) draw(); }
+    else go(t, 1000);
+  }
+
+  document.getElementById('views').addEventListener('click', function(e){
+    var b = e.target.closest('.chip'); if(!b) return;
+    this.querySelectorAll('.chip').forEach(function(x){ x.classList.toggle('on', x===b); });
+    apply(b.getAttribute('data-v'));
+  });
+
+  var defOn = document.getElementById('defOn'), defAmp = document.getElementById('defAmp'), defOut = document.getElementById('defOut'), scale = document.getElementById('scale');
+  function setDef(){
+    var a = defOn.checked ? +defAmp.value : 0;
+    defOut.textContent = '×' + defAmp.value;
+    scale.classList.toggle('on', defOn.checked);
+    go({amp:a}, 700);
+  }
+  defOn.addEventListener('change', setDef);
+  defAmp.addEventListener('input', function(){ defOut.textContent = '×' + defAmp.value; if(defOn.checked){ st.amp = +defAmp.value; tw=null; dirty=true; if(reduce) draw(); } });
+
+  /* rotazione con il puntatore */
+  cv.addEventListener('pointerdown', function(e){ drag = {x:e.clientX, y:e.clientY}; active = true; tw = null; cv.classList.add('drag'); cv.setPointerCapture(e.pointerId); });
+  cv.addEventListener('pointermove', function(e){
+    if(!drag) return;
+    var dx = e.clientX-drag.x, dy = e.clientY-drag.y; drag.x = e.clientX; drag.y = e.clientY;
+    st.yaw += dx*0.0065; st.pitch = Math.max(0, Math.min(1.5708, st.pitch + dy*0.005));
+    document.querySelectorAll('#views .chip').forEach(function(x){ x.classList.remove('on'); });
+    dirty = true; if(reduce) draw();
+  });
+  function end(){ drag = null; cv.classList.remove('drag'); lastInteract = performance.now(); setTimeout(function(){ if(!drag && performance.now()-lastInteract>3800) active = false; }, 4000); }
+  cv.addEventListener('pointerup', end); cv.addEventListener('pointercancel', end);
+})();
+</script>
+</body>
+</html>

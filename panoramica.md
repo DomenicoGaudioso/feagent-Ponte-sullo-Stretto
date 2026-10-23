@@ -53,7 +53,11 @@ ancora aperti sono elencati in [Punti aperti](11-punti-aperti.html).
 8. [Stato di riferimento](08-stato-di-riferimento.html): ricerca della forma.
 9. [Risultati e confronto con IBDAS](09-risultati.html).
 10. [Carichi mobili e vento](14-mobili-vento.html): strada, ferrovia, vento statico, riscontro con i casi di validazione IBDAS.
-11. [Vista estrusa in feagent](10-vista-estrusa.html): controllo del modello in 3D.
-12. [Punti aperti](11-punti-aperti.html).
-13. [Sezioni da disegno DXF](12-sezioni-dxf.html): lo strumento di feagent nato da questo lavoro.
-14. [Riproducibilità](13-riproducibilita.html): script, file e comandi.
+11. [Casi di validazione PS0005](15-casi-ps0005.html): i dieci casi statici di PS0005 con lo schema del carico, il carico applicato nel modello e tutte le grandezze, feagent contro IBDAS.
+12. [Casi di carico e combinazioni](16-casi-combinazioni.html): i 41 casi e le 441 combinazioni di PG0024 nel file del modello, con gli esportatori MIDAS e SAP2000.
+13. [Transito dinamico dei treni](17-transito-treni.html): treni RFI 1-6 al passo, percorribilità, sicurezza e comfort contro i criteri di PB0029.
+14. [Analisi per fasi costruttive](18-fasi-costruttive.html): montaggio in tredici fasi non lineari, confronto dello stato finale con e senza fasi.
+15. [Vista estrusa in feagent](10-vista-estrusa.html): controllo del modello in 3D.
+16. [Punti aperti](11-punti-aperti.html).
+17. [Sezioni da disegno DXF](12-sezioni-dxf.html): lo strumento di feagent nato da questo lavoro.
+18. [Riproducibilità](13-riproducibilita.html): script, file e comandi.
