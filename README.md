@@ -2,11 +2,8 @@
 
 Modello FEM globale 3D del Ponte sullo Stretto di Messina in [feagent](https://github.com/DomenicoGaudioso/feagent), ricostruito dal modello IBDAS 3.3f e dalle tavole del Progetto Definitivo 2011.
 
-La documentazione parte da [index.md](index.md) (sito Jekyll con il tema just-the-docs).
+**Pagina di presentazione:** <https://domenicogaudioso.github.io/feagent-Ponte-sullo-Stretto/>, con il modello 3D interattivo, i casi di carico e il confronto con il progetto.
 
-## Pubblicazione con GitHub Pages
+La documentazione tecnica parte da [panoramica.md](panoramica.md) (sito Jekyll con il tema just-the-docs) e comprende fonti, geometria, sezioni, carichi permanenti, carichi mobili e vento, casi di validazione, transito dei treni, fasi costruttive e punti aperti.
 
-Quando la repo diventa pubblica: Settings > Pages > Build and deployment >
-"Deploy from a branch", branch `main`, cartella `/ (root)`. Il sito sara'
-all'indirizzo `https://domenicogaudioso.github.io/feagent-Ponte-sullo-Stretto/`
-(il `baseurl` in `_config.yml` e' gia' impostato).
+Ricostruzione a scopo di studio dai documenti pubblici del Progetto Definitivo (2011) sul portale delle valutazioni ambientali del Ministero. Non è un elaborato ufficiale né una verifica dell'opera.
