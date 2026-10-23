@@ -207,17 +207,17 @@ footer.site a{color:var(--brand7);font-weight:500}
       </div>
       <div class="v-bar v-tr">
         <label><input type="checkbox" id="defOn"> Deformata</label>
-        <input type="range" id="defAmp" min="1" max="60" value="25" aria-label="Amplificazione della deformata">
-        <output id="defOut">×25</output>
+        <input type="range" id="defAmp" min="1" max="60" value="20" step="1" aria-label="Amplificazione della deformata">
+        <output id="defOut">×20</output>
       </div>
-      <div class="scale" id="scale"><div>uz del cassone [m]</div><div class="bar"></div><div class="t"><span id="scMin">−0,54</span><span id="scMax">+0,69</span></div></div>
+      <div class="scale" id="scale"><div id="scLab">uz del cassone [m]</div><div class="bar"></div><div class="t"><span id="scMin"></span><span id="scMax"></span></div></div>
       <div class="v-bl">
         <span><i style="border-color:#1f6672"></i>cavi principali</span>
         <span><i style="border-color:#7fb5bd;border-top-width:1px"></i>pendini</span>
         <span><i style="border-color:#14181d"></i>impalcato</span>
         <span><i style="border-color:#14181d;border-top-width:4px"></i>torri</span>
       </div>
-      <div class="v-br">Trascina per ruotare. La deformata è lo stato dei permanenti, spostamenti amplificati.</div>
+      <div class="v-br" id="vbr">Trascina per ruotare. La forma è quella dell'opera sotto i permanenti; la deformata è quella del peso proprio dal progetto, dalla geometria senza tensioni allo stato finale (spostamenti amplificati).</div>
     </div>
   </div>
 </section>
@@ -456,10 +456,10 @@ footer.site a{color:var(--brand7);font-weight:500}
   var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   var cv = document.getElementById('cv'), ctx = cv.getContext('2d');
   var viewer = document.getElementById('viewer');
-  var P, U, B, C, nN, cx0, cy0, cz0, W=0, H=0, dpr=1, ready=false, dirty=true;
+  var P, U, B, C, nN, cx0, cy0, cz0, W=0, H=0, dpr=1, ready=false, dirty=true, CASI=[], comp=2;
   var st = {yaw:-0.4, pitch:0.3, zoom:1.12, cx:0, cz:0, amp:0};
   var tw = null, drag = null, idleT = 0, active = false, lastInteract = 0;
-  var uMin = -0.54, uMax = 0.69;
+  var uMin = -1, uMax = 1;
 
   var VIEWS = {
     '3d':  {yaw:-0.4, pitch:0.3, zoom:1.12, cx:0, cz:0},
@@ -470,9 +470,11 @@ footer.site a{color:var(--brand7);font-weight:500}
 
   fetch('assets/data/ponte.json').then(function(r){ return r.json(); }).then(function(d){
     var n = d.nodes.length/3; nN = n;
-    P = new Float32Array(d.nodes.length); U = new Float32Array(d.u.length);
-    for(var i=0;i<P.length;i++){ P[i] = d.nodes[i]/10; U[i] = d.u[i]/100; }
-    B = d.beams; C = d.cables;
+    P = new Float32Array(d.nodes.length); U = new Float32Array(d.nodes.length);
+    for(var i=0;i<P.length;i++){ P[i] = d.nodes[i]/10; }
+    B = d.beams; C = d.cables; CASI = d.casi || [];
+    CASI.forEach(function(c){ c.U = new Float32Array(c.u.length); for(var j=0;j<c.u.length;j++) c.U[j] = c.u[j]/100; });
+    if(CASI.length && CASI[0].amp){ document.getElementById('defAmp').value = CASI[0].amp; ampTxt(); }
     var mn=[1e9,1e9,1e9], mx=[-1e9,-1e9,-1e9];
     for(i=0;i<n;i++) for(var k=0;k<3;k++){ var v=P[3*i+k]; if(v<mn[k])mn[k]=v; if(v>mx[k])mx[k]=v; }
     cx0=(mn[0]+mx[0])/2; cy0=0; cz0=(mn[2]+mx[2])/2;
@@ -542,7 +544,7 @@ footer.site a{color:var(--brand7);font-weight:500}
       for(var L=0;L<2;L++){
         var ls = lists[L];
         for(var q=0;q<ls.length;q+=2){
-          var uz = (U[3*ls[q]+2]+U[3*ls[q+1]+2])/2;
+          var uz = (U[3*ls[q]+comp]+U[3*ls[q+1]+comp])/2;
           var tt = (uz-uMin)/(uMax-uMin); tt = tt<0?0:tt>1?1:tt; var key = Math.round(tt*24);
           (bins[key] = bins[key] || []).push(ls[q],ls[q+1]);
         }
@@ -587,15 +589,23 @@ footer.site a{color:var(--brand7);font-weight:500}
     apply(b.getAttribute('data-v'));
   });
 
-  var defOn = document.getElementById('defOn'), defAmp = document.getElementById('defAmp'), defOut = document.getElementById('defOut'), scale = document.getElementById('scale');
-  function setDef(){
-    var a = defOn.checked ? +defAmp.value : 0;
-    defOut.textContent = '×' + defAmp.value;
-    scale.classList.toggle('on', defOn.checked);
-    go({amp:a}, 700);
+  var defAmp = document.getElementById('defAmp'), defOut = document.getElementById('defOut'), scale = document.getElementById('scale');
+  var defOn = document.getElementById('defOn'), vbr = document.getElementById('vbr'), vbr0 = vbr.textContent, caso = -1;
+  function fmt(v){ return (v>0?'+':v<0?'−':'') + Math.abs(v).toFixed(2).replace('.', ','); }
+  function ampTxt(){ defOut.textContent = +defAmp.value === 1 ? 'scala reale' : '×' + defAmp.value; }
+  function setCaso(k){
+    caso = k;
+    if(k < 0){ scale.classList.remove('on'); vbr.textContent = vbr0; go({amp:0}, 700); return; }
+    var c = CASI[k]; U = c.U; comp = c.componente === 'uy' ? 1 : 2;
+    uMin = Math.min(c.min, -0.01); uMax = Math.max(c.max, 0.01);
+    if(comp === 1){ var a = Math.max(-uMin, uMax); uMin = -a; uMax = a; }
+    document.getElementById('scLab').textContent = (comp === 1 ? 'uy' : 'uz') + ' dei cassoni [m]';
+    document.getElementById('scMin').textContent = fmt(uMin); document.getElementById('scMax').textContent = fmt(uMax);
+    scale.classList.add('on'); vbr.textContent = c.descrizione;
+    st.amp = 0; go({amp:+defAmp.value}, 900);
   }
-  defOn.addEventListener('change', setDef);
-  defAmp.addEventListener('input', function(){ defOut.textContent = '×' + defAmp.value; if(defOn.checked){ st.amp = +defAmp.value; tw=null; dirty=true; if(reduce) draw(); } });
+  defOn.addEventListener('change', function(){ setCaso(defOn.checked && CASI.length ? 0 : -1); });
+  defAmp.addEventListener('input', function(){ ampTxt(); if(caso >= 0){ st.amp = +defAmp.value; tw=null; dirty=true; if(reduce) draw(); } });
 
   /* rotazione con il puntatore */
   cv.addEventListener('pointerdown', function(e){ drag = {x:e.clientX, y:e.clientY}; active = true; tw = null; cv.classList.add('drag'); cv.setPointerCapture(e.pointerId); });
