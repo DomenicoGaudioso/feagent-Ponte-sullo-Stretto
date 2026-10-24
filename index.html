@@ -75,6 +75,7 @@ header.site{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.82);ba
 .chip:hover{border-color:var(--ink);color:var(--ink)}
 .chip.on{background:var(--ink);border-color:var(--ink);color:#fff}
 .v-tr label{font-size:12px;color:var(--sub);display:flex;align-items:center;gap:8px}
+.v-tr select{font:500 12px "Inter",sans-serif;border:1px solid var(--ring2);border-radius:6px;padding:4px 6px;background:#fff;color:var(--ink);max-width:190px}
 .v-tr input[type=range]{width:120px;accent-color:var(--brand7)}
 .v-tr output{font:500 12px "Inter",sans-serif;min-width:34px;color:var(--ink)}
 .v-bl{position:absolute;left:16px;bottom:14px;z-index:2;display:flex;gap:16px;flex-wrap:wrap;font-size:11.5px;color:var(--sub);background:rgba(255,255,255,.8);backdrop-filter:blur(6px);border:1px solid var(--ring);border-radius:10px;padding:6px 12px}
@@ -206,6 +207,7 @@ footer.site a{color:var(--brand7);font-weight:500}
         <button class="chip" data-v="tor">Torre Sicilia</button>
       </div>
       <div class="v-bar v-tr">
+        <select id="casoSel" aria-label="Caso di carico" style="display:none"></select>
         <label><input type="checkbox" id="defOn"> Deformata</label>
         <input type="range" id="defAmp" min="1" max="60" value="20" step="1" aria-label="Amplificazione della deformata">
         <output id="defOut">×20</output>
@@ -475,6 +477,9 @@ footer.site a{color:var(--brand7);font-weight:500}
     B = d.beams; C = d.cables; CASI = d.casi || [];
     CASI.forEach(function(c){ c.U = new Float32Array(c.u.length); for(var j=0;j<c.u.length;j++) c.U[j] = c.u[j]/100; });
     if(CASI.length && CASI[0].amp){ document.getElementById('defAmp').value = CASI[0].amp; ampTxt(); }
+    var selc = document.getElementById('casoSel');
+    CASI.forEach(function(c,i){ var o = document.createElement('option'); o.value = i; o.textContent = c.titolo; selc.appendChild(o); });
+    selc.style.display = CASI.length > 1 ? '' : 'none';
     var mn=[1e9,1e9,1e9], mx=[-1e9,-1e9,-1e9];
     for(i=0;i<n;i++) for(var k=0;k<3;k++){ var v=P[3*i+k]; if(v<mn[k])mn[k]=v; if(v>mx[k])mx[k]=v; }
     cx0=(mn[0]+mx[0])/2; cy0=0; cz0=(mn[2]+mx[2])/2;
@@ -602,9 +607,12 @@ footer.site a{color:var(--brand7);font-weight:500}
     document.getElementById('scLab').textContent = (comp === 1 ? 'uy' : 'uz') + ' dei cassoni [m]';
     document.getElementById('scMin').textContent = fmt(uMin); document.getElementById('scMax').textContent = fmt(uMax);
     scale.classList.add('on'); vbr.textContent = c.descrizione;
+    if(c.amp){ defAmp.value = c.amp; ampTxt(); }
     st.amp = 0; go({amp:+defAmp.value}, 900);
   }
-  defOn.addEventListener('change', function(){ setCaso(defOn.checked && CASI.length ? 0 : -1); });
+  var casoSel = document.getElementById('casoSel');
+  defOn.addEventListener('change', function(){ setCaso(defOn.checked && CASI.length ? +casoSel.value : -1); });
+  casoSel.addEventListener('change', function(){ defOn.checked = true; setCaso(+casoSel.value); });
   defAmp.addEventListener('input', function(){ ampTxt(); if(caso >= 0){ st.amp = +defAmp.value; tw=null; dirty=true; if(reduce) draw(); } });
 
   /* rotazione con il puntatore */
