@@ -92,8 +92,8 @@ header.site{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.82);ba
 .stats{padding:56px 0 24px}
 .stats-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:0;border-top:1px solid var(--ring2)}
 .stat{padding:22px 22px 6px 0}
-.stat b{font-family:var(--serif);font-weight:400;font-size:clamp(30px,3.6vw,46px);letter-spacing:-.02em;line-height:1.05;display:block}
-.stat span{font-size:12.5px;color:var(--sub);display:block;margin-top:6px;max-width:22ch}
+.stat b{font-family:var(--serif);font-weight:400;font-size:clamp(20px,2.1vw,26px);letter-spacing:-.01em;line-height:1.15;display:block}
+.stat span{font-size:12.5px;color:var(--sub);display:block;margin-top:8px;max-width:26ch}
 @media(max-width:900px){.stats-grid{grid-template-columns:repeat(2,1fr)}}
 
 /* sezioni */
@@ -125,6 +125,14 @@ header.site{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.82);ba
 .kv div{display:flex;justify-content:space-between;gap:18px;padding:11px 0;border-bottom:1px solid var(--ring);font-size:14px}
 .kv b{font-family:var(--serif);font-weight:400;font-size:19px;white-space:nowrap}
 .kv span{color:var(--sub)}
+.fig-box{border:1px solid var(--ring);border-radius:16px;padding:30px 32px;background:rgba(255,255,255,.7)}
+.fig-box h4{font:500 11px "Inter",sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+.fig-box ul,.box ul.plain{list-style:none}
+.fig-box li,.box ul.plain li{position:relative;padding:11px 0 11px 22px;border-bottom:1px solid var(--ring);font-size:14.5px;color:var(--sub)}
+.fig-box li:last-child,.box ul.plain li:last-child{border-bottom:0}
+.fig-box li::before,.box ul.plain li::before{content:"";position:absolute;left:2px;top:19px;width:7px;height:7px;border-radius:50%;background:var(--brand)}
+.box .plain-p{font-size:14.5px;color:var(--sub)}
+.btn-show{margin-top:18px;margin-right:8px}
 .panel .go{display:inline-block;margin-top:18px;font-size:14px;font-weight:500;color:var(--brand7)}
 .panel .go:hover{color:var(--ink)}
 figure.fig{border:1px solid var(--ring);border-radius:16px;overflow:hidden;background:#fff}
@@ -210,9 +218,9 @@ footer.site a{color:var(--brand7);font-weight:500}
         <select id="casoSel" aria-label="Caso di carico" style="display:none"></select>
         <label><input type="checkbox" id="defOn"> Deformata</label>
         <input type="range" id="defAmp" min="1" max="60" value="20" step="1" aria-label="Amplificazione della deformata">
-        <output id="defOut">×20</output>
+        <output id="defOut">amplificata</output>
       </div>
-      <div class="scale" id="scale"><div id="scLab">uz del cassone [m]</div><div class="bar"></div><div class="t"><span id="scMin"></span><span id="scMax"></span></div></div>
+      <div class="scale" id="scale"><div id="scLab">spostamento verticale del cassone</div><div class="bar"></div><div class="t"><span id="scMin">abbassamento</span><span id="scMax">sollevamento</span></div></div>
       <div class="v-bl">
         <span><i style="border-color:#1f6672"></i>cavi principali</span>
         <span><i style="border-color:#7fb5bd;border-top-width:1px"></i>pendini</span>
@@ -227,11 +235,11 @@ footer.site a{color:var(--brand7);font-weight:500}
 <section class="stats" data-reveal>
   <div class="wrap">
     <div class="stats-grid">
-      <div class="stat"><b>3&nbsp;300 m</b><span>campata centrale, torri a ±1&nbsp;650 m</span></div>
-      <div class="stat"><b>399 m</b><span>quota delle selle sulle torri</span></div>
-      <div class="stat"><b>3&nbsp;971</b><span>nodi, 3&nbsp;980 travi, 578 cavi e pendini</span></div>
-      <div class="stat"><b>≤ 1 %</b><span>scarto dai tiri dei cavi del progetto</span></div>
-      <div class="stat"><b>441</b><span>combinazioni di carico di PG0024</span></div>
+      <div class="stat"><b>Modello globale 3D</b><span>l'intera opera, dalle torri alle strutture terminali</span></div>
+      <div class="stat"><b>Cavi e pendini non lineari</b><span>forma di equilibrio dai tiri del progetto</span></div>
+      <div class="stat"><b>Carichi mobili e vento</b><span>strada, ferrovia e azioni statiche del vento</span></div>
+      <div class="stat"><b>Confronto con il progetto</b><span>passo dopo passo contro i risultati IBDAS</span></div>
+      <div class="stat"><b>Treni e montaggio</b><span>transito dinamico e fasi costruttive</span></div>
     </div>
   </div>
 </section>
@@ -241,12 +249,12 @@ footer.site a{color:var(--brand7);font-weight:500}
     <div class="sec-head" data-reveal>
       <span class="eyebrow">Il lavoro</span>
       <h2>Dalle tabelle del progetto a un modello che si può usare.</h2>
-      <p>Il modello nasce dal modello IBDAS 3.3f e dalle tavole quotate dell'impalcato, ed è costruito passo dopo passo misurando ogni passo contro i risultati IBDAS. Tutto a elementi trave, più cavi e pendini.</p>
+      <p>Il modello nasce dal modello IBDAS del progetto e dalle tavole quotate dell'impalcato, ed è costruito passo dopo passo misurando ogni passo contro i risultati IBDAS. Tutto a elementi trave, più cavi e pendini.</p>
     </div>
     <div class="cards" data-reveal>
-      <div class="card"><span class="n">01</span><h3>Impalcato a tre cassoni</h3><p>Due cassoni stradali laterali e il cassone ferroviario centrale, a sezione variabile. Il cassone stradale è costruito dalla tavola quotata, lamiera per lamiera, con i 117 traversi dei pendini a nodi condivisi.</p><a class="more" href="04-sezioni.html">Sezioni e traversi →</a></div>
-      <div class="card"><span class="n">02</span><h3>Cavi e pendini non lineari</h3><p>Un cavo per lato e 119 pendini ogni 30 m, con lunghezza a riposo dai tiri del progetto. Lo stato di riferimento trova da sé la controfreccia delle torri.</p><a class="more" href="08-stato-di-riferimento.html">Stato di riferimento →</a></div>
-      <div class="card"><span class="n">03</span><h3>Torri, selle, fondazioni</h3><p>Gambe a sezione variabile con pareti interne, tre traversi di torre, selle di deviazione a cerniera, strutture terminali, viadotti di approccio e vincoli.</p><a class="more" href="07-vincoli.html">Vincoli e parti secondarie →</a></div>
+      <div class="card"><h3>Impalcato a tre cassoni</h3><p>Due cassoni stradali laterali e il cassone ferroviario centrale, a sezione variabile. Il cassone stradale è costruito dalla tavola quotata, lamiera per lamiera, con i traversi dei pendini a nodi condivisi.</p><a class="more" href="04-sezioni.html">Sezioni e traversi →</a></div>
+      <div class="card"><h3>Cavi e pendini non lineari</h3><p>Un cavo per lato e i pendini lungo tutto l'impalcato sospeso, con lunghezza a riposo dai tiri del progetto. Lo stato di riferimento trova da sé la controfreccia delle torri.</p><a class="more" href="08-stato-di-riferimento.html">Stato di riferimento →</a></div>
+      <div class="card"><h3>Torri, selle, fondazioni</h3><p>Gambe a sezione variabile con pareti interne, traversi di torre, selle di deviazione a cerniera, strutture terminali, viadotti di approccio e vincoli.</p><a class="more" href="07-vincoli.html">Vincoli e parti secondarie →</a></div>
     </div>
   </div>
 </section>
@@ -256,7 +264,7 @@ footer.site a{color:var(--brand7);font-weight:500}
     <div class="sec-head" data-reveal>
       <span class="eyebrow">Casi di carico</span>
       <h2>Dai permanenti al transito dei treni.</h2>
-      <p>Ogni azione ha la sua pagina con i dati, il metodo e il confronto con il progetto. Qui i risultati principali.</p>
+      <p>Ogni azione ha la sua pagina con i dati, il metodo e il confronto con il progetto. Qui che cosa si calcola e si confronta; i valori stanno nella documentazione tecnica.</p>
     </div>
 
     <div class="tabs" role="tablist" id="tabs">
@@ -272,92 +280,79 @@ footer.site a{color:var(--brand7);font-weight:500}
       <div>
         <h3>Permanenti</h3>
         <p>I pesi strutturali e non strutturali (casi PP e PN di PS0002) sono applicati voce per voce e tarati sui tiri dei pendini del progetto. Con i permanenti il modello trova la forma di equilibrio di cavi e torri.</p>
-        <div class="kv">
-          <div><span>Tiro del cavo in mezzeria</span><b>1&nbsp;291 MN <small style="font:12px Inter;color:#8a94a0">(progetto 1&nbsp;289)</small></b></div>
-          <div><span>Tiro alla sella, campata centrale</span><b>1&nbsp;384 MN</b></div>
-          <div><span>Pendini, scarto medio dal progetto</span><b>1,6 %</b></div>
-          <div><span>Carico medio dell'impalcato sospeso</span><b>268,1 kN/m</b></div>
-        </div>
-        <a class="go" href="06-carichi.html">Carichi permanenti e taratura →</a> &nbsp; <a class="go" href="09-risultati.html">Risultati →</a>
+        <button class="btn btn-show" data-caso="peso proprio">Mostra nel modello ↑</button>
+        <div><a class="go" href="06-carichi.html">Carichi permanenti e taratura →</a> &nbsp; <a class="go" href="09-risultati.html">Risultati →</a></div>
+        <p class="note">I numeri sono nella documentazione tecnica.</p>
       </div>
-      <figure class="fig"><img loading="lazy" src="assets/img/geometria_prospetto.png" alt="Prospetto del ponte"><figcaption>Prospetto: cavo, pendini, impalcato e torri dal modello IBDAS.</figcaption></figure>
+      <div class="fig-box">
+        <h4>Grandezze confrontate con il progetto</h4>
+        <ul><li>tiri dei cavi principali in mezzeria, alle selle e agli ancoraggi</li><li>tiri dei pendini lungo l'impalcato sospeso</li><li>modi propri della struttura</li><li>pesi applicati per gruppo di elementi</li></ul>
+      </div>
     </div>
-
     <div class="panel" id="p2">
       <div>
         <h3>Carichi da traffico</h3>
         <p>Strada e ferrovia secondo PG0024: carico addensato QA per la capacità portante, rarefatto QR per la deformabilità. Si usano le linee d'influenza sulla rigidezza tangente dello stato di riferimento, e le disposizioni peggiori si rifanno in non lineare.</p>
-        <div class="kv">
-          <div><span>Abbassamento in mezzeria, QA</span><b>−13,5 m</b></div>
-          <div><span>Tiro del cavo in mezzeria, QA</span><b>+277 MN (+21 %)</b></div>
-          <div><span>Pendenza convenzionale, due treni</span><b>1,49 %<small style="font:12px Inter;color:#8a94a0"> (limite 2,2)</small></b></div>
-          <div><span>Momento alla base della gamba, QA</span><b>1&nbsp;728 MN m</b></div>
-        </div>
-        <a class="go" href="14-mobili-vento.html">Carichi mobili e vento →</a>
+        <button class="btn btn-show" data-caso="qa">Mostra nel modello ↑</button>
+        <div><a class="go" href="14-mobili-vento.html">Carichi mobili e vento →</a></div>
+        <p class="note">I numeri sono nella documentazione tecnica.</p>
       </div>
-      <figure class="fig"><img loading="lazy" src="assets/img/mobili_inviluppo_uz.png" alt="Inviluppo degli spostamenti verticali"><figcaption>Inviluppo degli spostamenti verticali del cassone ferroviario sotto QA e QR.</figcaption></figure>
+      <div class="fig-box">
+        <h4>Grandezze confrontate con il progetto</h4>
+        <ul><li>abbassamento e sollevamento dell'impalcato</li><li>tiri di cavi e pendini</li><li>sollecitazioni dei cassoni e alla base delle torri</li><li>pendenza convenzionale per la percorribilità</li></ul>
+      </div>
     </div>
-
     <div class="panel" id="p3">
       <div>
         <h3>Vento statico</h3>
-        <p>Profilo logaritmico di PG0024, coefficienti aerodinamici dell'appendice G di PS0002, quattro livelli e cinque direzioni: trasversale, a 45 gradi e lungo l'asse, nei due versi.</p>
-        <div class="kv">
-          <div><span>Spostamento trasversale, SLU raffica</span><b>−12,4 m</b></div>
-          <div><span>Tiro del cavo sopravento, SLU raffica</span><b>+25,7 MN</b></div>
-          <div><span>Momento alla base della gamba, 45°</span><b>1&nbsp;130 MN m</b></div>
-          <div><span>Linearizzazione, scarto sul trasversale</span><b>2 %</b></div>
-        </div>
-        <a class="go" href="14-mobili-vento.html#risultati-vento-statico">Risultati del vento →</a>
+        <p>Profilo logaritmico di PG0024 e coefficienti aerodinamici dell'appendice G di PS0002, a più livelli di intensità e in più direzioni: trasversale, obliqua e lungo l'asse, nei due versi.</p>
+        <button class="btn btn-show" data-caso="vento">Mostra nel modello ↑</button>
+        <div><a class="go" href="14-mobili-vento.html#risultati-vento-statico">Risultati del vento →</a></div>
+        <p class="note">I numeri sono nella documentazione tecnica.</p>
       </div>
-      <figure class="fig"><img loading="lazy" src="assets/img/vento_uy.png" alt="Spostamento trasversale sotto il vento"><figcaption>Spostamento trasversale dell'impalcato lungo il ponte, vento da Ovest.</figcaption></figure>
+      <div class="fig-box">
+        <h4>Grandezze confrontate con il progetto</h4>
+        <ul><li>spostamento trasversale dell'impalcato e dei cavi</li><li>tiri dei cavi sopravento e sottovento</li><li>flessione longitudinale e trasversale delle torri</li><li>scarto della linearizzazione rispetto alla statica non lineare</li></ul>
+      </div>
     </div>
-
     <div class="panel" id="p4">
       <div>
         <h3>Casi di validazione di PS0005</h3>
-        <p>Dieci casi statici calcolati da IBDAS nella relazione di validazione. Per ognuno: lo schema del carico del progetto, il carico come è applicato in feagent e tutte le grandezze riportate, modello contro IBDAS.</p>
-        <table class="tbl">
-          <tr><th>Caso</th><th>Cavo mezzeria uz [m]</th><th>Tiro mezzeria [MN]</th></tr>
-          <tr><td>LC1 · 2 × 5000 kN</td><td>−1,05 | −1,16</td><td>+8,8 | +9,2</td></tr>
-          <tr><td>LC7 · 25 kN/m</td><td>−2,49 | −2,84</td><td>+81,0 | +82,5</td></tr>
-          <tr><td>LC9 · 10 kN/m trasv.</td><td></td><td>+0,3 | +0,6</td></tr>
-          <tr><td>LC10 · 3 × 25 kN/m</td><td>−2,24 | −2,46</td><td>+71,4 | +74,0</td></tr>
-        </table>
-        <p class="note">feagent | IBDAS. Tiri entro il 2-4 %, spostamento trasversale entro il 6 %.</p>
-        <a class="go" href="15-casi-ps0005.html">Tutti i casi, input e output →</a> &nbsp; <a class="go" href="16-casi-combinazioni.html">Casi e combinazioni →</a>
+        <p>I casi statici calcolati da IBDAS nella relazione di validazione. Per ognuno: lo schema del carico del progetto, il carico come è applicato in feagent e tutte le grandezze riportate, modello contro IBDAS.</p>
+        
+        <div><a class="go" href="15-casi-ps0005.html">Tutti i casi, input e output →</a> &nbsp; <a class="go" href="16-casi-combinazioni.html">Casi e combinazioni →</a></div>
+        <p class="note">I numeri sono nella documentazione tecnica.</p>
       </div>
-      <figure class="fig"><img loading="lazy" src="assets/img/ps0005_lc7.png" alt="Schema del carico LC7 di PS0005"><figcaption>Schema del carico LC7 in PS0005: 25 kN/m verticali su metà larghezza, per tutta la lunghezza.</figcaption></figure>
+      <div class="fig-box">
+        <h4>Grandezze confrontate con il progetto</h4>
+        <ul><li>spostamenti del cavo e dell'impalcato</li><li>tiri dei cavi alle selle e agli ancoraggi</li><li>spostamenti longitudinali delle selle</li><li>spostamento trasversale sotto carico laterale</li></ul>
+      </div>
     </div>
-
     <div class="panel" id="p5">
       <div>
         <h3>Transito dinamico dei treni</h3>
-        <p>Analisi al passo dei sei treni reali RFI sul modello globale, con ponte e veicoli accoppiati, integrazione HHT e i criteri di percorribilità, sicurezza e comfort della relazione del progetto.</p>
-        <div class="kv">
-          <div><span>Pendenza trasversale (limite 0,08)</span><b>0,021</b></div>
-          <div><span>Accelerazione non compensata (limite 0,6)</span><b>0,26 m/s²</b></div>
-          <div><span>Svio Y/P (limite 0,8)</span><b>0,20</b></div>
-          <div><span>Ribaltamento ΔP/P (limite 0,9)</span><b>0,27</b></div>
-        </div>
-        <a class="go" href="17-transito-treni.html">Transito dei treni →</a>
+        <p>Analisi al passo dei treni reali RFI sul modello globale, con ponte e veicoli accoppiati, integrazione HHT e i criteri di percorribilità, sicurezza e comfort della relazione del progetto.</p>
+        
+        <div><a class="go" href="17-transito-treni.html">Transito dei treni →</a></div>
+        <p class="note">I numeri sono nella documentazione tecnica.</p>
       </div>
-      <figure class="fig"><img loading="lazy" src="assets/img/transito_confronto_pb0029.png" alt="Confronto con la relazione di percorribilità"><figcaption>Criteri di percorribilità e comfort: questo modello contro la relazione del progetto.</figcaption></figure>
+      <div class="fig-box">
+        <h4>Grandezze confrontate con il progetto</h4>
+        <ul><li>percorribilità: pendenza trasversale, sopraelevazione, accelerazione non compensata</li><li>sicurezza: svio e ribaltamento</li><li>comfort: indici di Sperling e accelerazioni della cassa</li><li>accelerazione verticale della sede</li></ul>
+      </div>
     </div>
-
     <div class="panel" id="p6">
       <div>
         <h3>Fasi costruttive</h3>
-        <p>Analisi non lineare per fasi del montaggio, dalle torri e dai cavi fino ai permanenti portati: 13 fasi dalla verifica di montaggio del progetto. Si confronta lo stato finale con e senza fasi.</p>
-        <div class="kv">
-          <div><span>Abbassamento in mezzeria, con fasi</span><b>+0,17 m</b></div>
-          <div><span>Abbassamento in mezzeria, senza fasi</span><b>−0,29 m</b></div>
-          <div><span>Tiro del cavo in mezzeria</span><b>−0,7 %</b></div>
-          <div><span>Tiro all'ancoraggio Sicilia</span><b>−5,5 %</b></div>
-        </div>
-        <a class="go" href="18-fasi-costruttive.html">Analisi per fasi →</a>
+        <p>Analisi non lineare per fasi del montaggio, dalle torri e dai cavi fino ai permanenti portati, secondo la verifica di montaggio del progetto. Si confronta lo stato finale con e senza fasi.</p>
+        
+        <div><a class="go" href="18-fasi-costruttive.html">Analisi per fasi →</a></div>
+        <p class="note">I numeri sono nella documentazione tecnica.</p>
       </div>
-      <figure class="fig"><img loading="lazy" src="assets/img/fasi_evoluzione.png" alt="Evoluzione fase per fase"><figcaption>Abbassamento dell'impalcato e tiro del cavo in mezzeria, fase per fase.</figcaption></figure>
+      <div class="fig-box">
+        <h4>Grandezze confrontate con il progetto</h4>
+        <ul><li>forma di cavi e impalcato fase per fase</li><li>tiri nello stato finale, con e senza fasi</li><li>spostamenti delle selle</li><li>punti aperti dichiarati sulla regolazione dei pendini</li></ul>
+      </div>
     </div>
   </div>
 </section>
@@ -366,32 +361,26 @@ footer.site a{color:var(--brand7);font-weight:500}
   <div class="wrap">
     <div class="sec-head" data-reveal>
       <span class="eyebrow">Validazione</span>
-      <h2>Numero per numero, contro il progetto.</h2>
-      <p>Lo scopo è un modello che rispecchi quello della documentazione. Ogni passo si misura contro i risultati IBDAS 3.3f, e quello che ancora non torna è dichiarato.</p>
+      <h2>Passo dopo passo, contro il progetto.</h2>
+      <p>Lo scopo è un modello che rispecchi quello della documentazione. Ogni passo si misura contro i risultati IBDAS del progetto, e quello che ancora non torna è dichiarato.</p>
     </div>
     <div class="two" data-reveal>
       <div class="box">
-        <h3>Tiri dei cavi, permanenti</h3>
-        <table class="tbl">
-          <tr><th>Punto</th><th>feagent [MN]</th><th>IBDAS [MN]</th><th>Scarto</th></tr>
-          <tr><td>mezzeria</td><td>1&nbsp;291</td><td>1&nbsp;289</td><td>+0,1 %</td></tr>
-          <tr><td>sella, centrale</td><td>1&nbsp;384</td><td>1&nbsp;383</td><td>+0,1 %</td></tr>
-          <tr><td>sella, laterale</td><td>1&nbsp;407</td><td>1&nbsp;417</td><td>−0,7 %</td></tr>
-          <tr><td>ancoraggio Sicilia</td><td>1&nbsp;328</td><td>1&nbsp;341</td><td>−0,9 %</td></tr>
-        </table>
+        <h3>Che cosa si confronta</h3>
+        <ul class="plain">
+          <li>tiri dei cavi e dei pendini sotto i permanenti</li>
+          <li>modi propri della struttura</li>
+          <li>casi statici di validazione di PS0005</li>
+          <li>spostamenti e sollecitazioni sotto traffico e vento</li>
+        </ul>
+        <p class="note"><a href="09-risultati.html">Risultati e confronto con IBDAS →</a></p>
       </div>
       <div class="box">
-        <h3>Modi propri</h3>
-        <table class="tbl">
-          <tr><th>Modo</th><th>feagent [Hz]</th><th>IBDAS [Hz]</th><th>Scarto</th></tr>
-          <tr><td>1° trasversale</td><td>0,0296</td><td>0,030</td><td>−1,3 %</td></tr>
-          <tr><td>1° verticale antisim.</td><td>0,0504</td><td>0,055</td><td>−8,3 %</td></tr>
-          <tr><td>longitudinale</td><td>0,0647</td><td>0,065</td><td>−0,5 %</td></tr>
-          <tr><td>1° verticale sim.</td><td>0,0804</td><td>0,081</td><td>−0,7 %</td></tr>
-        </table>
+        <h3>Che cosa resta aperto</h3>
+        <p class="plain-p">Quello che ancora non torna è elencato e motivato nella documentazione, voce per voce, con lo stato di ciascun punto.</p>
+        <p class="note"><a href="11-punti-aperti.html">Punti aperti →</a></p>
       </div>
     </div>
-    <p class="note" data-reveal>Punti ancora aperti: il modo verticale antisimmetrico, l'abbassamento in mezzeria sotto i permanenti e i pendini vicino alle torri. <a href="11-punti-aperti.html">Elenco completo →</a></p>
   </div>
 </section>
 
@@ -597,16 +586,22 @@ footer.site a{color:var(--brand7);font-weight:500}
   var defAmp = document.getElementById('defAmp'), defOut = document.getElementById('defOut'), scale = document.getElementById('scale');
   var defOn = document.getElementById('defOn'), vbr = document.getElementById('vbr'), vbr0 = vbr.textContent, caso = -1;
   function fmt(v){ return (v>0?'+':v<0?'−':'') + Math.abs(v).toFixed(2).replace('.', ','); }
-  function ampTxt(){ defOut.textContent = +defAmp.value === 1 ? 'scala reale' : '×' + defAmp.value; }
+  function ampTxt(){ defOut.textContent = +defAmp.value === 1 ? 'scala reale' : 'amplificata'; }
+  var DESCR = {
+    'peso proprio': "Deformata del peso proprio dal progetto (permanenti PP e PN, PS0002 App. E-1): dalla geometria senza tensioni allo stato finale. Spostamenti amplificati.",
+    'qa': "Carico da traffico QA (PG0024) disposto per il massimo abbassamento del cassone ferroviario in mezzeria, sopra i permanenti. Statica non lineare di feagent. Spostamenti amplificati.",
+    'vento': "Vento medio trasversale da Ovest allo SLS1, senza traffico (PG0024), sopra i permanenti. Statica non lineare di feagent. Spostamenti amplificati."
+  };
   function setCaso(k){
     caso = k;
     if(k < 0){ scale.classList.remove('on'); vbr.textContent = vbr0; go({amp:0}, 700); return; }
     var c = CASI[k]; U = c.U; comp = c.componente === 'uy' ? 1 : 2;
     uMin = Math.min(c.min, -0.01); uMax = Math.max(c.max, 0.01);
     if(comp === 1){ var a = Math.max(-uMin, uMax); uMin = -a; uMax = a; }
-    document.getElementById('scLab').textContent = (comp === 1 ? 'uy' : 'uz') + ' dei cassoni [m]';
-    document.getElementById('scMin').textContent = fmt(uMin); document.getElementById('scMax').textContent = fmt(uMax);
-    scale.classList.add('on'); vbr.textContent = c.descrizione;
+    document.getElementById('scLab').textContent = comp === 1 ? 'spostamento trasversale del cassone' : 'spostamento verticale del cassone';
+    document.getElementById('scMin').textContent = comp === 1 ? 'verso −' : 'abbassamento';
+    document.getElementById('scMax').textContent = comp === 1 ? 'verso +' : 'sollevamento';
+    scale.classList.add('on'); vbr.textContent = DESCR[c.id] || 'Spostamenti amplificati.';
     if(c.amp){ defAmp.value = c.amp; ampTxt(); }
     st.amp = 0; go({amp:+defAmp.value}, 900);
   }
@@ -614,6 +609,17 @@ footer.site a{color:var(--brand7);font-weight:500}
   defOn.addEventListener('change', function(){ setCaso(defOn.checked && CASI.length ? +casoSel.value : -1); });
   casoSel.addEventListener('change', function(){ defOn.checked = true; setCaso(+casoSel.value); });
   defAmp.addEventListener('input', function(){ ampTxt(); if(caso >= 0){ st.amp = +defAmp.value; tw=null; dirty=true; if(reduce) draw(); } });
+
+  /* pulsanti 'Mostra nel modello' dei casi di carico */
+  document.querySelectorAll('[data-caso]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var id = b.getAttribute('data-caso'), k = -1;
+      CASI.forEach(function(c, i){ if(c.id === id) k = i; });
+      if(k < 0) return;
+      casoSel.value = String(k); defOn.checked = true; setCaso(k);
+      document.getElementById('modello').scrollIntoView({behavior: reduce ? 'auto' : 'smooth', block: 'start'});
+    });
+  });
 
   /* rotazione con il puntatore */
   cv.addEventListener('pointerdown', function(e){ drag = {x:e.clientX, y:e.clientY}; active = true; tw = null; cv.classList.add('drag'); cv.setPointerCapture(e.pointerId); });
