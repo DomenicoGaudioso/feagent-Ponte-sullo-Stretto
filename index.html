@@ -479,7 +479,7 @@ footer.site a{color:var(--brand7);font-weight:500}
     if(CASI.length && CASI[0].amp){ document.getElementById('defAmp').value = CASI[0].amp; ampTxt(); }
     var selc = document.getElementById('casoSel');
     CASI.forEach(function(c,i){ var o = document.createElement('option'); o.value = i; o.textContent = c.titolo; selc.appendChild(o); });
-    selc.style.display = CASI.length > 1 ? '' : 'none';
+    selc.style.display = CASI.length > 1 ? '' : 'none'; if(CASI.length > 1){ selc.value = '1'; if(CASI[1].amp){ document.getElementById('defAmp').value = CASI[1].amp; ampTxt(); } }
     var mn=[1e9,1e9,1e9], mx=[-1e9,-1e9,-1e9];
     for(i=0;i<n;i++) for(var k=0;k<3;k++){ var v=P[3*i+k]; if(v<mn[k])mn[k]=v; if(v>mx[k])mx[k]=v; }
     cx0=(mn[0]+mx[0])/2; cy0=0; cz0=(mn[2]+mx[2])/2;
